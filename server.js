@@ -5,7 +5,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 
 const mongoose = require('mongoose')
-mongoose.connect(process.env.MLAB_URI || 'mongodb://localhost/exercise-track' )
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/exercise-track', {useNewUrlParser: true})
 
 app.use(cors())
 
@@ -17,6 +17,13 @@ app.use(express.static('public'))
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
+
+const cool = require('./cool-file.js');
+
+app.post("/api/exercise/new-user", cool.createUser);
+app.post("/api/exercise/add", cool.addExercise);
+app.get("/api/exercise/users", cool.getUsers);
+app.get("/api/exercise/log", cool.getLog);
 
 
 // Not found middleware
@@ -46,3 +53,4 @@ app.use((err, req, res, next) => {
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
 })
+
